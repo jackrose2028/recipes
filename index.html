@@ -1,0 +1,1543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recipe Book App</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cal+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+:root {
+    --primary-color: #2563eb;
+    --primary-hover: #1d4ed8;
+    --secondary-color: #64748b;
+    --success-color: #059669;
+    --warning-color: #d97706;
+    --danger-color: #dc2626;
+    --background: #ffffff;
+    --surface: #f8fafc;
+    --surface-hover: #f1f5f9;
+    --text-primary: #0f172a;
+    --text-secondary: #475569;
+    --border-color: #e2e8f0;
+    --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Cal Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    background-color: var(--background);
+    color: var(--text-primary);
+    line-height: 1.6;
+}
+
+.nav-bar {
+    background: var(--background);
+    border-bottom: 1px solid var(--border-color);
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.nav-brand {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.nav-brand .material-icons {
+    font-size: 2rem;
+    color: var(--primary-color);
+}
+
+.nav-brand h1 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.nav-tabs {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.nav-tab {
+    padding: 0.5rem 1rem;
+    border: none;
+    background: transparent;
+    color: var(--text-secondary);
+    font-weight: 500;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.nav-tab:hover {
+    background: var(--surface-hover);
+    color: var(--text-primary);
+}
+
+.nav-tab.active {
+    background: var(--primary-color);
+    color: white;
+}
+
+.main-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+.search-section {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    align-items: center;
+}
+
+.search-bar {
+    position: relative;
+    flex: 1;
+    max-width: 400px;
+}
+
+.search-bar .material-icons {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-secondary);
+    font-size: 1.25rem;
+}
+
+.search-bar input {
+    width: 100%;
+    padding: 0.75rem 1rem 0.75rem 3rem;
+    border: 1px solid var(--border-color);
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    background: var(--surface);
+    transition: all 0.2s ease;
+}
+
+.search-bar input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgb(37 99 235 / 0.1);
+}
+
+.add-recipe-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 0.5rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.add-recipe-btn:hover {
+    background: var(--primary-hover);
+    transform: translateY(-1px);
+}
+
+.categories {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+    max-height: 200px;
+    overflow-y: auto;
+    padding: 0.5rem;
+    border: 1px solid var(--border-color);
+    border-radius: 0.5rem;
+    background: var(--surface);
+}
+
+.category-btn {
+    padding: 0.5rem 1rem;
+    border: 1px solid var(--border-color);
+    background: var(--surface);
+    color: var(--text-secondary);
+    border-radius: 0.5rem;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.category-btn:hover {
+    background: var(--surface-hover);
+    border-color: var(--primary-color);
+}
+
+.category-btn.active {
+    background: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+}
+
+.recipes-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+.recipe-card {
+    background: var(--surface);
+    border-radius: 0.75rem;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.recipe-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+}
+
+.recipe-image {
+    width: 100%;
+    height: 200px;
+    background: var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-secondary);
+    position: relative;
+    overflow: hidden;
+}
+
+.recipe-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.recipe-image .material-icons {
+    font-size: 3rem;
+}
+
+.recipe-content {
+    padding: 1.25rem;
+}
+
+.recipe-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 0.75rem;
+}
+
+.recipe-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 0.25rem;
+}
+
+.recipe-category {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    text-transform: capitalize;
+}
+
+.favorite-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.25rem;
+    border-radius: 0.25rem;
+    transition: all 0.2s ease;
+}
+
+.favorite-btn .material-icons {
+    color: var(--text-secondary);
+    transition: color 0.2s ease;
+}
+
+.favorite-btn.favorited .material-icons {
+    color: var(--danger-color);
+}
+
+.recipe-meta {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 0.75rem;
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+}
+
+.meta-item {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.meta-item .material-icons {
+    font-size: 1rem;
+}
+
+.recipe-nutrition {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.5rem;
+    padding: 0.75rem;
+    background: var(--background);
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+}
+
+.nutrition-item {
+    display: flex;
+    justify-content: space-between;
+}
+
+.nutrition-label {
+    color: var(--text-secondary);
+}
+
+.nutrition-value {
+    font-weight: 500;
+}
+
+/* Meal Planner Styles */
+.planner-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.planner-header h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.week-nav {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.week-btn {
+    background: var(--surface);
+    border: 1px solid var(--border-color);
+    border-radius: 0.5rem;
+    padding: 0.5rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.week-btn:hover {
+    background: var(--surface-hover);
+}
+
+#current-week {
+    font-weight: 500;
+    min-width: 200px;
+    text-align: center;
+}
+
+.planner-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 1rem;
+}
+
+.day-column {
+    background: var(--surface);
+    border-radius: 0.75rem;
+    padding: 1rem;
+    min-height: 400px;
+}
+
+.day-header {
+    text-align: center;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.day-name {
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+}
+
+.day-date {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+}
+
+.meal-slots {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.meal-slot {
+    border: 2px dashed var(--border-color);
+    border-radius: 0.5rem;
+    padding: 0.75rem;
+    min-height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+    text-align: center;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.meal-slot:hover {
+    border-color: var(--primary-color);
+    background: rgb(37 99 235 / 0.05);
+}
+
+.meal-slot.filled {
+    border-style: solid;
+    background: var(--background);
+    color: var(--text-primary);
+}
+
+.meal-label {
+    font-weight: 500;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    margin-bottom: 0.25rem;
+}
+
+/* Modal Styles */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal.active {
+    display: flex;
+}
+
+.modal-content {
+    background: var(--background);
+    border-radius: 0.75rem;
+    max-width: 600px;
+    width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: var(--shadow-lg);
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.modal-header h2 {
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.25rem;
+    border-radius: 0.25rem;
+    transition: background 0.2s ease;
+}
+
+.close-btn:hover {
+    background: var(--surface-hover);
+}
+
+#recipe-form {
+    padding: 1.5rem;
+}
+
+.form-group {
+    margin-bottom: 1.25rem;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+}
+
+.form-group label {
+    display: block;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+    color: var(--text-primary);
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid var(--border-color);
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    background: var(--surface);
+    transition: all 0.2s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgb(37 99 235 / 0.1);
+}
+
+.image-upload {
+    position: relative;
+}
+
+.image-upload input[type="file"] {
+    position: absolute;
+    opacity: 0;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+}
+
+.image-preview {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    border: 2px dashed var(--border-color);
+    border-radius: 0.5rem;
+    background: var(--surface);
+    color: var(--text-secondary);
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.image-preview:hover {
+    border-color: var(--primary-color);
+    background: rgb(37 99 235 / 0.05);
+}
+
+.image-preview .material-icons {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+}
+
+.image-preview img {
+    max-width: 100%;
+    max-height: 200px;
+    border-radius: 0.5rem;
+}
+
+.nutrition-section {
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border-color);
+}
+
+.nutrition-section h3 {
+    margin-bottom: 1rem;
+    font-size: 1.125rem;
+    font-weight: 600;
+}
+
+.nutrition-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.calc-nutrition-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    background: var(--success-color);
+    color: white;
+    border: none;
+    border-radius: 0.5rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-bottom: 1rem;
+}
+
+.calc-nutrition-btn:hover {
+    background: #047857;
+}
+
+.form-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border-color);
+}
+
+.btn-primary,
+.btn-secondary {
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: none;
+}
+
+.btn-primary {
+    background: var(--primary-color);
+    color: white;
+}
+
+.btn-primary:hover {
+    background: var(--primary-hover);
+}
+
+.btn-secondary {
+    background: var(--surface);
+    color: var(--text-secondary);
+    border: 1px solid var(--border-color);
+}
+
+.btn-secondary:hover {
+    background: var(--surface-hover);
+    color: var(--text-primary);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .nav-bar {
+        padding: 1rem;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .main-content {
+        padding: 1rem;
+    }
+
+    .search-section {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .search-bar {
+        max-width: none;
+    }
+
+    .recipes-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .planner-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+
+    .nutrition-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .form-actions {
+        flex-direction: column;
+    }
+}
+
+/* Animation for smooth transitions */
+.recipe-card,
+.day-column,
+.meal-slot {
+    animation: fadeInUp 0.3s ease;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+    </style>
+</head>
+<body>
+    <div id="app">
+        <nav class="nav-bar">
+            <div class="nav-brand">
+                <span class="material-icons">menu_book</span>
+                <h1>Recipe Book</h1>
+            </div>
+            <div class="nav-tabs">
+                <button class="nav-tab active" data-tab="recipes">Recipes</button>
+                <button class="nav-tab" data-tab="planner">Meal Planner</button>
+                <button class="nav-tab" data-tab="favorites">Favorites</button>
+            </div>
+        </nav>
+
+        <main class="main-content">
+            <!-- Recipes Tab -->
+            <div id="recipes-tab" class="tab-content active">
+                <div class="search-section">
+                    <div class="search-bar">
+                        <span class="material-icons">search</span>
+                        <input type="text" id="recipe-search" placeholder="Search recipes...">
+                    </div>
+                    <button class="add-recipe-btn" id="add-recipe-btn">
+                        <span class="material-icons">add</span>
+                        Add Recipe
+                    </button>
+                </div>
+
+                <div class="categories">
+                    <button class="category-btn active" data-category="all">All</button>
+                    <button class="category-btn" data-category="breakfast">Breakfast</button>
+                    <button class="category-btn" data-category="lunch">Lunch</button>
+                    <button class="category-btn" data-category="dinner">Dinner</button>
+                    <button class="category-btn" data-category="dessert">Dessert</button>
+                    <button class="category-btn" data-category="snacks">Snacks</button>
+                    <button class="category-btn" data-category="appetizers">Appetizers</button>
+                    <button class="category-btn" data-category="soups">Soups</button>
+                    <button class="category-btn" data-category="salads">Salads</button>
+                    <button class="category-btn" data-category="pasta">Pasta</button>
+                    <button class="category-btn" data-category="pizza">Pizza</button>
+                    <button class="category-btn" data-category="seafood">Seafood</button>
+                    <button class="category-btn" data-category="chicken">Chicken</button>
+                    <button class="category-btn" data-category="beef">Beef</button>
+                    <button class="category-btn" data-category="pork">Pork</button>
+                    <button class="category-btn" data-category="vegetarian">Vegetarian</button>
+                    <button class="category-btn" data-category="vegan">Vegan</button>
+                    <button class="category-btn" data-category="gluten-free">Gluten-Free</button>
+                    <button class="category-btn" data-category="keto">Keto</button>
+                    <button class="category-btn" data-category="low-carb">Low-Carb</button>
+                    <button class="category-btn" data-category="smoothies">Smoothies</button>
+                    <button class="category-btn" data-category="beverages">Beverages</button>
+                    <button class="category-btn" data-category="baking">Baking</button>
+                    <button class="category-btn" data-category="grilling">Grilling</button>
+                    <button class="category-btn" data-category="slow-cooker">Slow Cooker</button>
+                    <button class="category-btn" data-category="instant-pot">Instant Pot</button>
+                    <button class="category-btn" data-category="one-pot">One Pot</button>
+                    <button class="category-btn" data-category="quick-meals">Quick Meals</button>
+                    <button class="category-btn" data-category="comfort-food">Comfort Food</button>
+                    <button class="category-btn" data-category="healthy">Healthy</button>
+                </div>
+
+                <div class="recipes-grid" id="recipes-grid">
+                    <!-- Recipe cards will be inserted here -->
+                </div>
+            </div>
+
+            <!-- Meal Planner Tab -->
+            <div id="planner-tab" class="tab-content">
+                <div class="planner-header">
+                    <h2>Weekly Meal Planner</h2>
+                    <div class="week-nav">
+                        <button id="prev-week" class="week-btn">
+                            <span class="material-icons">chevron_left</span>
+                        </button>
+                        <span id="current-week">Week of Jan 1-7, 2024</span>
+                        <button id="next-week" class="week-btn">
+                            <span class="material-icons">chevron_right</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="planner-grid" id="planner-grid">
+                    <!-- Meal planner will be inserted here -->
+                </div>
+            </div>
+
+            <!-- Favorites Tab -->
+            <div id="favorites-tab" class="tab-content">
+                <h2>Favorite Recipes</h2>
+                <div class="recipes-grid" id="favorites-grid">
+                    <!-- Favorite recipes will be inserted here -->
+                </div>
+            </div>
+        </main>
+
+        <!-- Recipe Modal -->
+        <div id="recipe-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 id="modal-title">Add Recipe</h2>
+                    <button class="close-btn" id="close-modal">
+                        <span class="material-icons">close</span>
+                    </button>
+                </div>
+                <form id="recipe-form">
+                    <div class="form-group">
+                        <label for="recipe-name">Recipe Name</label>
+                        <input type="text" id="recipe-name" required>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="recipe-category">Category</label>
+                            <select id="recipe-category" required>
+                                <option value="breakfast">Breakfast</option>
+                                <option value="lunch">Lunch</option>
+                                <option value="dinner">Dinner</option>
+                                <option value="dessert">Dessert</option>
+                                <option value="snacks">Snacks</option>
+                                <option value="appetizers">Appetizers</option>
+                                <option value="soups">Soups</option>
+                                <option value="salads">Salads</option>
+                                <option value="pasta">Pasta</option>
+                                <option value="pizza">Pizza</option>
+                                <option value="seafood">Seafood</option>
+                                <option value="chicken">Chicken</option>
+                                <option value="beef">Beef</option>
+                                <option value="pork">Pork</option>
+                                <option value="vegetarian">Vegetarian</option>
+                                <option value="vegan">Vegan</option>
+                                <option value="gluten-free">Gluten-Free</option>
+                                <option value="keto">Keto</option>
+                                <option value="low-carb">Low-Carb</option>
+                                <option value="smoothies">Smoothies</option>
+                                <option value="beverages">Beverages</option>
+                                <option value="baking">Baking</option>
+                                <option value="grilling">Grilling</option>
+                                <option value="slow-cooker">Slow Cooker</option>
+                                <option value="instant-pot">Instant Pot</option>
+                                <option value="one-pot">One Pot</option>
+                                <option value="quick-meals">Quick Meals</option>
+                                <option value="comfort-food">Comfort Food</option>
+                                <option value="healthy">Healthy</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="prep-time">Prep Time (min)</label>
+                            <input type="number" id="prep-time" min="1">
+                        </div>
+                        <div class="form-group">
+                            <label for="cook-time">Cook Time (min)</label>
+                            <input type="number" id="cook-time" min="1">
+                        </div>
+                        <div class="form-group">
+                            <label for="servings">Servings</label>
+                            <input type="number" id="servings" min="1" value="4">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="recipe-image">Recipe Image</label>
+                        <div class="image-upload">
+                            <input type="file" id="recipe-image" accept="image/*">
+                            <div class="image-preview" id="image-preview">
+                                <span class="material-icons">photo_camera</span>
+                                <span>Upload Image</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="ingredients">Ingredients</label>
+                        <textarea id="ingredients" placeholder="Enter ingredients, one per line" rows="5" required></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="instructions">Instructions</label>
+                        <textarea id="instructions" placeholder="Enter cooking instructions" rows="8" required></textarea>
+                    </div>
+
+                    <div class="nutrition-section">
+                        <h3>Nutrition Information (per serving)</h3>
+                        <div class="nutrition-grid">
+                            <div class="form-group">
+                                <label for="calories">Calories</label>
+                                <input type="number" id="calories" min="0">
+                            </div>
+                            <div class="form-group">
+                                <label for="protein">Protein (g)</label>
+                                <input type="number" id="protein" min="0" step="0.1">
+                            </div>
+                            <div class="form-group">
+                                <label for="carbs">Carbs (g)</label>
+                                <input type="number" id="carbs" min="0" step="0.1">
+                            </div>
+                            <div class="form-group">
+                                <label for="fat">Fat (g)</label>
+                                <input type="number" id="fat" min="0" step="0.1">
+                            </div>
+                            <div class="form-group">
+                                <label for="fiber">Fiber (g)</label>
+                                <input type="number" id="fiber" min="0" step="0.1">
+                            </div>
+                            <div class="form-group">
+                                <label for="sugar">Sugar (g)</label>
+                                <input type="number" id="sugar" min="0" step="0.1">
+                            </div>
+                        </div>
+                        <button type="button" id="calculate-nutrition" class="calc-nutrition-btn">
+                            <span class="material-icons">calculate</span>
+                            Auto-Calculate Nutrition
+                        </button>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" id="cancel-btn" class="btn-secondary">Cancel</button>
+                        <button type="submit" class="btn-primary">Save Recipe</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+class RecipeBookApp {
+    constructor() {
+        this.recipes = JSON.parse(localStorage.getItem('recipes')) || [];
+        this.favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+        this.mealPlan = JSON.parse(localStorage.getItem('mealPlan')) || {};
+        this.currentWeekStart = this.getWeekStart(new Date());
+        this.currentCategory = 'all';
+        this.searchQuery = '';
+        this.editingRecipe = null;
+
+        this.initializeEventListeners();
+        this.renderRecipes();
+        this.renderMealPlanner();
+        this.updateWeekDisplay();
+        
+        // Add some sample recipes if none exist
+        if (this.recipes.length === 0) {
+            this.addSampleRecipes();
+        }
+    }
+
+    initializeEventListeners() {
+        // Navigation tabs
+        document.querySelectorAll('.nav-tab').forEach(tab => {
+            tab.addEventListener('click', (e) => this.switchTab(e.target.dataset.tab));
+        });
+
+        // Search functionality
+        document.getElementById('recipe-search').addEventListener('input', (e) => {
+            this.searchQuery = e.target.value.toLowerCase();
+            this.renderRecipes();
+        });
+
+        // Category filtering
+        document.querySelectorAll('.category-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => this.filterByCategory(e.target.dataset.category));
+        });
+
+        // Modal controls
+        document.getElementById('add-recipe-btn').addEventListener('click', () => this.openModal());
+        document.getElementById('close-modal').addEventListener('click', () => this.closeModal());
+        document.getElementById('cancel-btn').addEventListener('click', () => this.closeModal());
+        document.getElementById('recipe-modal').addEventListener('click', (e) => {
+            if (e.target === document.getElementById('recipe-modal')) {
+                this.closeModal();
+            }
+        });
+
+        // Form submission
+        document.getElementById('recipe-form').addEventListener('submit', (e) => this.handleFormSubmit(e));
+
+        // Image upload
+        document.getElementById('recipe-image').addEventListener('change', (e) => this.handleImageUpload(e));
+
+        // Nutrition calculator
+        document.getElementById('calculate-nutrition').addEventListener('click', () => this.calculateNutrition());
+
+        // Week navigation
+        document.getElementById('prev-week').addEventListener('click', () => this.navigateWeek(-1));
+        document.getElementById('next-week').addEventListener('click', () => this.navigateWeek(1));
+    }
+
+    switchTab(tabName) {
+        // Update nav tabs
+        document.querySelectorAll('.nav-tab').forEach(tab => tab.classList.remove('active'));
+        document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
+
+        // Update tab content
+        document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+        document.getElementById(`${tabName}-tab`).classList.add('active');
+
+        // Render content for specific tabs
+        if (tabName === 'favorites') {
+            this.renderFavorites();
+        } else if (tabName === 'planner') {
+            this.renderMealPlanner();
+        }
+    }
+
+    filterByCategory(category) {
+        this.currentCategory = category;
+        
+        // Update category buttons
+        document.querySelectorAll('.category-btn').forEach(btn => btn.classList.remove('active'));
+        document.querySelector(`[data-category="${category}"]`).classList.add('active');
+        
+        this.renderRecipes();
+    }
+
+    getFilteredRecipes() {
+        let filtered = this.recipes;
+
+        // Filter by category
+        if (this.currentCategory !== 'all') {
+            filtered = filtered.filter(recipe => recipe.category === this.currentCategory);
+        }
+
+        // Filter by search query
+        if (this.searchQuery) {
+            filtered = filtered.filter(recipe => 
+                recipe.name.toLowerCase().includes(this.searchQuery) ||
+                recipe.ingredients.toLowerCase().includes(this.searchQuery)
+            );
+        }
+
+        return filtered;
+    }
+
+    renderRecipes() {
+        const grid = document.getElementById('recipes-grid');
+        const filtered = this.getFilteredRecipes();
+
+        if (filtered.length === 0) {
+            grid.innerHTML = `
+                <div style="grid-column: 1 / -1; text-align: center; padding: 3rem; color: var(--text-secondary);">
+                    <span class="material-icons" style="font-size: 3rem; margin-bottom: 1rem; display: block;">restaurant</span>
+                    <p>No recipes found. Add your first recipe to get started!</p>
+                </div>
+            `;
+            return;
+        }
+
+        grid.innerHTML = filtered.map(recipe => this.createRecipeCard(recipe)).join('');
+        
+        // Add event listeners to recipe cards
+        grid.querySelectorAll('.recipe-card').forEach(card => {
+            const recipeId = card.dataset.recipeId;
+            card.addEventListener('click', (e) => {
+                if (!e.target.closest('.favorite-btn')) {
+                    this.viewRecipe(recipeId);
+                }
+            });
+        });
+
+        // Add event listeners to favorite buttons
+        grid.querySelectorAll('.favorite-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const recipeId = btn.closest('.recipe-card').dataset.recipeId;
+                this.toggleFavorite(recipeId);
+            });
+        });
+    }
+
+    createRecipeCard(recipe) {
+        const isFavorited = this.favorites.includes(recipe.id);
+        const totalTime = (recipe.prepTime || 0) + (recipe.cookTime || 0);
+        
+        return `
+            <div class="recipe-card" data-recipe-id="${recipe.id}">
+                <div class="recipe-image">
+                    ${recipe.image ? 
+                        `<img src="${recipe.image}" alt="${recipe.name}">` : 
+                        '<span class="material-icons">restaurant</span>'
+                    }
+                </div>
+                <div class="recipe-content">
+                    <div class="recipe-header">
+                        <div>
+                            <div class="recipe-title">${recipe.name}</div>
+                            <div class="recipe-category">${recipe.category}</div>
+                        </div>
+                        <button class="favorite-btn ${isFavorited ? 'favorited' : ''}">
+                            <span class="material-icons">${isFavorited ? 'favorite' : 'favorite_border'}</span>
+                        </button>
+                    </div>
+                    <div class="recipe-meta">
+                        ${totalTime > 0 ? `
+                            <div class="meta-item">
+                                <span class="material-icons">schedule</span>
+                                <span>${totalTime} min</span>
+                            </div>
+                        ` : ''}
+                        ${recipe.servings ? `
+                            <div class="meta-item">
+                                <span class="material-icons">people</span>
+                                <span>${recipe.servings} servings</span>
+                            </div>
+                        ` : ''}
+                    </div>
+                    ${this.hasNutritionInfo(recipe) ? `
+                        <div class="recipe-nutrition">
+                            ${recipe.nutrition.calories ? `
+                                <div class="nutrition-item">
+                                    <span class="nutrition-label">Calories</span>
+                                    <span class="nutrition-value">${recipe.nutrition.calories}</span>
+                                </div>
+                            ` : ''}
+                            ${recipe.nutrition.protein ? `
+                                <div class="nutrition-item">
+                                    <span class="nutrition-label">Protein</span>
+                                    <span class="nutrition-value">${recipe.nutrition.protein}g</span>
+                                </div>
+                            ` : ''}
+                            ${recipe.nutrition.carbs ? `
+                                <div class="nutrition-item">
+                                    <span class="nutrition-label">Carbs</span>
+                                    <span class="nutrition-value">${recipe.nutrition.carbs}g</span>
+                                </div>
+                            ` : ''}
+                            ${recipe.nutrition.fat ? `
+                                <div class="nutrition-item">
+                                    <span class="nutrition-label">Fat</span>
+                                    <span class="nutrition-value">${recipe.nutrition.fat}g</span>
+                                </div>
+                            ` : ''}
+                        </div>
+                    ` : ''}
+                </div>
+            </div>
+        `;
+    }
+
+    hasNutritionInfo(recipe) {
+        const nutrition = recipe.nutrition || {};
+        return nutrition.calories || nutrition.protein || nutrition.carbs || nutrition.fat;
+    }
+
+    renderFavorites() {
+        const grid = document.getElementById('favorites-grid');
+        const favoriteRecipes = this.recipes.filter(recipe => this.favorites.includes(recipe.id));
+
+        if (favoriteRecipes.length === 0) {
+            grid.innerHTML = `
+                <div style="grid-column: 1 / -1; text-align: center; padding: 3rem; color: var(--text-secondary);">
+                    <span class="material-icons" style="font-size: 3rem; margin-bottom: 1rem; display: block;">favorite_border</span>
+                    <p>No favorite recipes yet. Heart some recipes to see them here!</p>
+                </div>
+            `;
+            return;
+        }
+
+        grid.innerHTML = favoriteRecipes.map(recipe => this.createRecipeCard(recipe)).join('');
+        
+        // Add event listeners
+        grid.querySelectorAll('.recipe-card').forEach(card => {
+            const recipeId = card.dataset.recipeId;
+            card.addEventListener('click', (e) => {
+                if (!e.target.closest('.favorite-btn')) {
+                    this.viewRecipe(recipeId);
+                }
+            });
+        });
+
+        grid.querySelectorAll('.favorite-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const recipeId = btn.closest('.recipe-card').dataset.recipeId;
+                this.toggleFavorite(recipeId);
+                this.renderFavorites(); // Re-render favorites to remove unfavorited items
+            });
+        });
+    }
+
+    toggleFavorite(recipeId) {
+        const index = this.favorites.indexOf(recipeId);
+        if (index > -1) {
+            this.favorites.splice(index, 1);
+        } else {
+            this.favorites.push(recipeId);
+        }
+        
+        localStorage.setItem('favorites', JSON.stringify(this.favorites));
+        this.renderRecipes();
+    }
+
+    getWeekStart(date) {
+        const d = new Date(date);
+        const day = d.getDay();
+        const diff = d.getDate() - day;
+        return new Date(d.setDate(diff));
+    }
+
+    navigateWeek(direction) {
+        const newDate = new Date(this.currentWeekStart);
+        newDate.setDate(newDate.getDate() + (direction * 7));
+        this.currentWeekStart = newDate;
+        this.updateWeekDisplay();
+        this.renderMealPlanner();
+    }
+
+    updateWeekDisplay() {
+        const endDate = new Date(this.currentWeekStart);
+        endDate.setDate(endDate.getDate() + 6);
+        
+        const startStr = this.currentWeekStart.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+        const endStr = endDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+        
+        document.getElementById('current-week').textContent = `Week of ${startStr} - ${endStr}`;
+    }
+
+    renderMealPlanner() {
+        const grid = document.getElementById('planner-grid');
+        const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+        const meals = ['Breakfast', 'Lunch', 'Dinner'];
+
+        grid.innerHTML = days.map((day, index) => {
+            const date = new Date(this.currentWeekStart);
+            date.setDate(date.getDate() + index);
+            const dateKey = date.toISOString().split('T')[0];
+
+            return `
+                <div class="day-column">
+                    <div class="day-header">
+                        <div class="day-name">${day}</div>
+                        <div class="day-date">${date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</div>
+                    </div>
+                    <div class="meal-slots">
+                        ${meals.map(meal => {
+                            const mealKey = `${dateKey}-${meal.toLowerCase()}`;
+                            const plannedMeal = this.mealPlan[mealKey];
+                            
+                            return `
+                                <div class="meal-slot ${plannedMeal ? 'filled' : ''}" data-meal-key="${mealKey}">
+                                    <div class="meal-label">${meal}</div>
+                                    ${plannedMeal ? 
+                                        `<div>${plannedMeal.name}</div>` : 
+                                        '<div>Click to add meal</div>'
+                                    }
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+                </div>
+            `;
+        }).join('');
+
+        // Add event listeners to meal slots
+        grid.querySelectorAll('.meal-slot').forEach(slot => {
+            slot.addEventListener('click', (e) => {
+                const mealKey = slot.dataset.mealKey;
+                this.selectMealForSlot(mealKey);
+            });
+        });
+    }
+
+    selectMealForSlot(mealKey) {
+        // Simple meal selection - in a real app, this could be a more sophisticated picker
+        const recipes = this.recipes;
+        if (recipes.length === 0) {
+            alert('No recipes available. Add some recipes first!');
+            return;
+        }
+
+        const recipeNames = recipes.map(r => r.name);
+        const selection = prompt(`Select a recipe for this meal:\n\n${recipeNames.map((name, i) => `${i + 1}. ${name}`).join('\n')}\n\nEnter the number:`);
+        
+        if (selection && !isNaN(selection)) {
+            const index = parseInt(selection) - 1;
+            if (index >= 0 && index < recipes.length) {
+                this.mealPlan[mealKey] = {
+                    id: recipes[index].id,
+                    name: recipes[index].name
+                };
+                localStorage.setItem('mealPlan', JSON.stringify(this.mealPlan));
+                this.renderMealPlanner();
+            }
+        }
+    }
+
+    openModal(recipe = null) {
+        this.editingRecipe = recipe;
+        const modal = document.getElementById('recipe-modal');
+        const form = document.getElementById('recipe-form');
+        
+        if (recipe) {
+            document.getElementById('modal-title').textContent = 'Edit Recipe';
+            this.populateForm(recipe);
+        } else {
+            document.getElementById('modal-title').textContent = 'Add Recipe';
+            form.reset();
+            this.resetImagePreview();
+        }
+        
+        modal.classList.add('active');
+    }
+
+    closeModal() {
+        document.getElementById('recipe-modal').classList.remove('active');
+        document.getElementById('recipe-form').reset();
+        this.resetImagePreview();
+        this.editingRecipe = null;
+    }
+
+    populateForm(recipe) {
+        document.getElementById('recipe-name').value = recipe.name;
+        document.getElementById('recipe-category').value = recipe.category;
+        document.getElementById('prep-time').value = recipe.prepTime || '';
+        document.getElementById('cook-time').value = recipe.cookTime || '';
+        document.getElementById('servings').value = recipe.servings || '';
+        document.getElementById('ingredients').value = recipe.ingredients;
+        document.getElementById('instructions').value = recipe.instructions;
+
+        // Populate nutrition fields
+        if (recipe.nutrition) {
+            document.getElementById('calories').value = recipe.nutrition.calories || '';
+            document.getElementById('protein').value = recipe.nutrition.protein || '';
+            document.getElementById('carbs').value = recipe.nutrition.carbs || '';
+            document.getElementById('fat').value = recipe.nutrition.fat || '';
+            document.getElementById('fiber').value = recipe.nutrition.fiber || '';
+            document.getElementById('sugar').value = recipe.nutrition.sugar || '';
+        }
+
+        // Handle image preview
+        if (recipe.image) {
+            const preview = document.getElementById('image-preview');
+            preview.innerHTML = `<img src="${recipe.image}" alt="Recipe image">`;
+        }
+    }
+
+    handleImageUpload(event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const preview = document.getElementById('image-preview');
+                preview.innerHTML = `<img src="${e.target.result}" alt="Recipe image">`;
+            };
+            reader.readAsDataURL(file);
+        }
+    }
+
+    resetImagePreview() {
+        const preview = document.getElementById('image-preview');
+        preview.innerHTML = `
+            <span class="material-icons">photo_camera</span>
+            <span>Upload Image</span>
+        `;
+    }
+
+    calculateNutrition() {
+        const ingredients = document.getElementById('ingredients').value;
+        if (!ingredients.trim()) {
+            alert('Please enter ingredients first to calculate nutrition.');
+            return;
+        }
+
+        // Simple nutrition estimation based on common ingredients
+        // In a real app, this would use a nutrition API
+        const lines = ingredients.split('\n').filter(line => line.trim());
+        
+        let totalCalories = 0;
+        let totalProtein = 0;
+        let totalCarbs = 0;
+        let totalFat = 0;
+
+        lines.forEach(line => {
+            const nutrition = this.estimateNutrition(line.toLowerCase());
+            totalCalories += nutrition.calories;
+            totalProtein += nutrition.protein;
+            totalCarbs += nutrition.carbs;
+            totalFat += nutrition.fat;
+        });
+
+        const servings = parseInt(document.getElementById('servings').value) || 1;
+        
+        document.getElementById('calories').value = Math.round(totalCalories / servings);
+        document.getElementById('protein').value = Math.round((totalProtein / servings) * 10) / 10;
+        document.getElementById('carbs').value = Math.round((totalCarbs / servings) * 10) / 10;
+        document.getElementById('fat').value = Math.round((totalFat / servings) * 10) / 10;
+    }
+
+    estimateNutrition(ingredient) {
+        // Very basic estimation - in reality, this would use a proper nutrition database
+        const estimates = {
+            'chicken': { calories: 165, protein: 31, carbs: 0, fat: 3.6 },
+            'beef': { calories: 250, protein: 26, carbs: 0, fat: 17 },
+            'rice': { calories: 130, protein: 2.7, carbs: 28, fat: 0.3 },
+            'pasta': { calories: 110, protein: 4, carbs: 22, fat: 1 },
+            'bread': { calories: 80, protein: 4, carbs: 15, fat: 1 },
+            'egg': { calories: 70, protein: 6, carbs: 0.6, fat: 5 },
+            'milk': { calories: 42, protein: 3.4, carbs: 5, fat: 1 },
+            'cheese': { calories: 113, protein: 7, carbs: 1, fat: 9 },
+            'potato': { calories: 77, protein: 2, carbs: 17, fat: 0.1 },
+            'tomato': { calories: 18, protein: 0.9, carbs: 3.9, fat: 0.2 },
+            'onion': { calories: 40, protein: 1.1, carbs: 9.3, fat: 0.1 },
+            'carrot': { calories: 41, protein: 0.9, carbs: 9.6, fat: 0.2 }
+        };
+
+        for (const [key, values] of Object.entries(estimates)) {
+            if (ingredient.includes(key)) {
+                return values;
+            }
+        }
+
+        // Default estimation for unknown ingredients
+        return { calories: 50, protein: 2, carbs: 8, fat: 1 };
+    }
+
+    handleFormSubmit(event) {
+        event.preventDefault();
+        
+        const formData = new FormData(event.target);
+        const imagePreview = document.getElementById('image-preview').querySelector('img');
+        
+        const recipe = {
+            id: this.editingRecipe ? this.editingRecipe.id : Date.now().toString(),
+            name: formData.get('recipe-name') || document.getElementById('recipe-name').value,
+            category: document.getElementById('recipe-category').value,
+            prepTime: parseInt(document.getElementById('prep-time').value) || 0,
+            cookTime: parseInt(document.getElementById('cook-time').value) || 0,
+            servings: parseInt(document.getElementById('servings').value) || 1,
+            ingredients: document.getElementById('ingredients').value,
+            instructions: document.getElementById('instructions').value,
+            image: imagePreview ? imagePreview.src : null,
+            nutrition: {
+                calories: parseFloat(document.getElementById('calories').value) || 0,
+                protein: parseFloat(document.getElementById('protein').value) || 0,
+                carbs: parseFloat(document.getElementById('carbs').value) || 0,
+                fat: parseFloat(document.getElementById('fat').value) || 0,
+                fiber: parseFloat(document.getElementById('fiber').value) || 0,
+                sugar: parseFloat(document.getElementById('sugar').value) || 0
+            },
+            createdAt: this.editingRecipe ? this.editingRecipe.createdAt : new Date().toISOString()
+        };
+
+        if (this.editingRecipe) {
+            const index = this.recipes.findIndex(r => r.id === this.editingRecipe.id);
+            this.recipes[index] = recipe;
+        } else {
+            this.recipes.push(recipe);
+        }
+
+        localStorage.setItem('recipes', JSON.stringify(this.recipes));
+        this.renderRecipes();
+        this.closeModal();
+    }
+
+    viewRecipe(recipeId) {
+        const recipe = this.recipes.find(r => r.id === recipeId);
+        if (recipe) {
+            this.openModal(recipe);
+        }
+    }
+
+    addSampleRecipes() {
+        const sampleRecipes = [
+            {
+                id: '1',
+                name: 'Classic Pancakes',
+                category: 'breakfast',
+                prepTime: 10,
+                cookTime: 15,
+                servings: 4,
+                ingredients: '2 cups all-purpose flour\n2 tablespoons sugar\n2 teaspoons baking powder\n1 teaspoon salt\n2 eggs\n1¾ cups milk\n¼ cup melted butter',
+                instructions: '1. Mix dry ingredients in a large bowl.\n2. In another bowl, whisk eggs, milk, and melted butter.\n3. Combine wet and dry ingredients until just mixed.\n4. Cook on griddle over medium heat until bubbles form.\n5. Flip and cook until golden brown.',
+                nutrition: {
+                    calories: 180,
+                    protein: 6,
+                    carbs: 28,
+                    fat: 5,
+                    fiber: 1,
+                    sugar: 6
+                },
+                createdAt: new Date().toISOString()
+            },
+            {
+                id: '2',
+                name: 'Grilled Chicken Salad',
+                category: 'lunch',
+                prepTime: 15,
+                cookTime: 20,
+                servings: 2,
+                ingredients: '2 chicken breasts\n4 cups mixed greens\n1 cucumber, sliced\n1 cup cherry tomatoes\n¼ red onion, sliced\n2 tablespoons olive oil\nSalt and pepper to taste',
+                instructions: '1. Season chicken with salt and pepper.\n2. Grill chicken for 6-8 minutes per side.\n3. Let chicken rest, then slice.\n4. Combine greens, cucumber, tomatoes, and onion.\n5. Top with sliced chicken and drizzle with olive oil.',
+                nutrition: {
+                    calories: 285,
+                    protein: 35,
+                    carbs: 12,
+                    fat: 12,
+                    fiber: 4,
+                    sugar: 8
+                },
+                createdAt: new Date().toISOString()
+            },
+            {
+                id: '3',
+                name: 'Spaghetti Bolognese',
+                category: 'dinner',
+                prepTime: 15,
+                cookTime: 45,
+                servings: 6,
+                ingredients: '1 lb ground beef\n1 onion, diced\n3 cloves garlic, minced\n1 can crushed tomatoes\n2 tablespoons tomato paste\n1 lb spaghetti\n½ cup red wine\nFresh basil\nParmesan cheese',
+                instructions: '1. Cook spaghetti according to package directions.\n2. Brown ground beef in large pan.\n3. Add onion and garlic, cook until soft.\n4. Add tomato paste, cook 1 minute.\n5. Add wine and tomatoes, simmer 30 minutes.\n6. Serve over pasta with basil and cheese.',
+                nutrition: {
+                    calories: 420,
+                    protein: 28,
+                    carbs: 45,
+                    fat: 14,
+                    fiber: 3,
+                    sugar: 8
+                },
+                createdAt: new Date().toISOString()
+            }
+        ];
+
+        this.recipes = sampleRecipes;
+        localStorage.setItem('recipes', JSON.stringify(this.recipes));
+        this.renderRecipes();
+    }
+}
+
+// Initialize the app when the DOM is loaded
+document.addEventListener('DOMContentLoaded', () => {
+    new RecipeBookApp();
+});
+
+
+    </script>
+</body>
+</html>
